@@ -25,17 +25,8 @@ gulp.task('sass', function(done) {
     .on('end', done);
 });
 
-gulp.task('coffee', function(done) {
-  gulp.src(paths.coffee)
-  .pipe(coffee({bare: true}).on('error', gutil.log))
-  .pipe(concat('application.js'))
-  .pipe(gulp.dest('./www/js'))
-  .on('end', done)
-})
-
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.coffee, ['coffee']);
 });
 
 gulp.task('install', ['git-check'], function() {

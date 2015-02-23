@@ -1,28 +1,44 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
-
-.controller('ChatsCtrl', function($scope, Chats) {
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
+.controller('SignupController', function($scope, UserFactory, $ionicPopup, $state) {
+  $scope.submitSignup = function(email, password, password_confirmation) {
+    UserFactory.signup(email, password, password_confirmation)
+      .success(function(data){
+        var alertPopup = $ionicPopup.alert({
+          title: 'Okay!',
+          template: 'Now try signing in'
+        });
+        alertPopup.then(function(res) {
+          $state.go('dash');
+        });
+      })
+      .error(function(err){
+        if(err != undefined) {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Error!',
+            template: JSON.stringify(err)
+          });
+        }
+      });
   }
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('FriendsCtrl', function($scope, Friends) {
-  $scope.friends = Friends.all();
-})
-
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
-  $scope.friend = Friends.get($stateParams.friendId);
-})
-
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('LoginController', function($scope, UserFactory, $ionicPopup) {
+  $scope.submitLogin = function(email, password) {
+    UserFactory.login(email, password)
+      .success(function(data){
+        var alertPopup = $ionicPopup.alert({
+          title: 'Signed in!',
+          template: JSON.stringify(data)
+        });
+      })
+      .error(function(err){
+        if(err != undefined) {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Error!',
+            template: JSON.stringify(err)
+          });
+        }
+      });
+  }
 });
